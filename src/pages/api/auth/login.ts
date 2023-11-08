@@ -4,7 +4,10 @@ import admin from '../../../app/lib/firebaseAdmin';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
-    const { idToken } = req.body.idToken;
+    const { idToken } = req.body;
+    if (!idToken) {
+      return res.status(400).json({ message: 'idToken is required' });
+    }
     try {
       const decodedToken = await admin.auth().verifyIdToken(idToken);
       const uid = decodedToken.uid;
